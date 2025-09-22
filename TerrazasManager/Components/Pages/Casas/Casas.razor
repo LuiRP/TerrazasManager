@@ -9,7 +9,12 @@
 <ul>
     @foreach (var Casa in TodaslasCasas)
         {
-            <li>@Casa.NumeroCasa</li>
+            <li>
+                <div>
+                @Casa.NumeroCasa
+                <NavLink href="@($"/casas/edit/{Casa.Id}")"><span>Editar</span></NavLink>
+                </div>
+            </li>
         }
 </ul>
 

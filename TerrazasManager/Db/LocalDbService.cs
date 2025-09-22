@@ -24,7 +24,7 @@ namespace TerrazasManager.Db
             return await _connection.Table<Casa>().ToListAsync();
         }
 
-        public async Task<Casa> GetById(int id)
+        public async Task<Casa> GetCasaById(int id)
         {
             return await _connection.Table<Casa>().Where(x => x.Id == id).FirstOrDefaultAsync();
         }
