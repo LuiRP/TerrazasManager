@@ -14,7 +14,7 @@
                 <div>
                 @Casa.NumeroCasa
                 <NavLink href="@($"/casas/edit/{Casa.Id}")"><span>Editar</span></NavLink>
-
+                <NavLink href="@($"/casas/details/{Casa.Id}")"><span>Detalles</span></NavLink>
                 <button @onclick="() => DeleteData(Casa.Id)">Eliminar Casa</button>
                 </div>
             </li>

@@ -1,0 +1,32 @@
+﻿@page "/casas/details/{CasaId:int}"
+@using TerrazasManager.Db
+@using TerrazasManager.Db.Models
+@inject NavigationManager NavManager
+<h3>CasasDetalles</h3>
+
+@if (CasaDetalles != null)
+{
+    <p><b>Número de Casa:</b> @CasaDetalles.NumeroCasa</p>
+    <p><b>Jefe de Familia:</b> @CasaDetalles.JefeFamilia</p>
+    <p><b>Número de Personas en la Familia:</b> @CasaDetalles.PersonasFamilia</p>
+    <p><b>Es Residencia:</b> @(CasaDetalles.EsResidencia ? "Sí" : "No")</p>
+}
+else
+{
+    <p>Cargando detalles...</p>
+}
+
+
+@code {
+    [Inject]
+    private LocalDbService _dbService { get; set; }
+    Casa CasaDetalles = new();
+
+    [Parameter]
+    public int CasaId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        CasaDetalles = await _dbService.GetCasaById(CasaId);
+    }
+}
