@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using TerrazasManager.Db;
 
 namespace TerrazasManager
 {
@@ -15,6 +16,8 @@ namespace TerrazasManager
                 });
 
             builder.Services.AddMauiBlazorWebView();
+            builder.Services.AddSingleton<LocalDbService>();
+            builder.Services.AddTransient<MainPage>();
 
 #if DEBUG
     		builder.Services.AddBlazorWebViewDeveloperTools();

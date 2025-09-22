@@ -1,0 +1,28 @@
+﻿@page "/casas"
+@using TerrazasManager.Db
+@using TerrazasManager.Db.Models
+<h3>Casas</h3>
+<NavLink href="/casas/add">
+    <span>Añadir Casas</span>
+</NavLink>
+
+<ul>
+    @foreach (var Casa in TodaslasCasas)
+        {
+            <li>@Casa.NumeroCasa</li>
+        }
+</ul>
+
+
+
+@code {
+    [Inject]
+    private LocalDbService _dbService { get; set; }
+    List<Casa> TodaslasCasas = new List<Casa>{};
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        TodaslasCasas = await _dbService.GetCasas();
+    }
+}

@@ -1,0 +1,45 @@
+﻿@page "/casas/add"
+@using TerrazasManager.Db
+@using TerrazasManager.Db.Models
+@inject NavigationManager NavManager
+<h3>CasasAdd</h3>
+
+<EditForm Model="@NewCasa" OnValidSubmit="Submit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+
+    <div>
+        <label for="NumeroCasa">Numero de Casa:</label>
+        <InputText id="NumeroCasa" @bind-Value="@NewCasa.NumeroCasa"></InputText>
+    </div>
+
+    <div>
+        <label for="EsResidencia">Es Residencia:</label>
+        <InputCheckbox id="EsResidencia" @bind-Value="@NewCasa.EsResidencia"></InputCheckbox>
+    </div>
+
+    <div>
+        <label for="PersonasFamilia">Numero de Personas en la Familia:</label>
+        <InputNumber id="PersonasFamilia" @bind-Value="@NewCasa.PersonasFamilia"></InputNumber>
+    </div>
+
+    <div>
+        <label for="JefeFamilia">Jefe de Familia:</label>
+        <InputText id="JefeFamilia" @bind-Value="@NewCasa.JefeFamilia"></InputText>
+    </div>
+
+    <button type="submit">Añadir</button>
+</EditForm>
+
+
+@code {
+    [Inject]
+    private LocalDbService _dbService { get; set; }
+    Casa NewCasa = new();
+
+    private async void Submit()
+    {
+        await _dbService.CreateCasa(NewCasa);
+        NavManager.NavigateTo("/casas");
+    }
+}
