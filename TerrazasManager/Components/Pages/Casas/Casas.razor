@@ -1,4 +1,5 @@
 ﻿@page "/casas"
+@inject IJSRuntime JSRuntime
 @using TerrazasManager.Db
 @using TerrazasManager.Db.Models
 <h3>Casas</h3>
@@ -13,6 +14,8 @@
                 <div>
                 @Casa.NumeroCasa
                 <NavLink href="@($"/casas/edit/{Casa.Id}")"><span>Editar</span></NavLink>
+
+                <button @onclick="() => DeleteData(Casa.Id)">Eliminar Casa</button>
                 </div>
             </li>
         }
@@ -25,9 +28,22 @@
     private LocalDbService _dbService { get; set; }
     List<Casa> TodaslasCasas = new List<Casa>{};
 
-
     protected override async Task OnInitializedAsync()
     {
         TodaslasCasas = await _dbService.GetCasas();
+    }
+
+    private async Task DeleteData(int Id)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are  you sure you want to delete this item?");
+        if (confirmed)
+        {
+            await _dbService.DeleteCasa(await _dbService.GetCasaById(Id));
+            TodaslasCasas = await _dbService.GetCasas();
+        }
+        else
+        {
+            Console.WriteLine("Delete cancelled.");
+        }
     }
 }
