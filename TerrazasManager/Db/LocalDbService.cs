@@ -17,7 +17,10 @@ namespace TerrazasManager.Db
         {
             _connection = new SQLiteAsyncConnection(Path.Combine(FileSystem.AppDataDirectory, DB_NAME));
             _connection.CreateTableAsync<Casa>();
+            _connection.CreateTableAsync<Operativo>();
         }
+
+        //Casa DB methods
 
         public async Task<List<Casa>> GetCasas()
         {
@@ -43,5 +46,33 @@ namespace TerrazasManager.Db
         {
             await _connection.DeleteAsync(casa);
         }
+
+        //Operativos DB methods
+
+        public async Task<List<Operativo>> GetOperativos()
+        {
+            return await _connection.Table<Operativo>().ToListAsync();
+        }
+
+        public async Task<Operativo> GetOperativoById(int id)
+        {
+            return await _connection.Table<Operativo>().Where(x => x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task CreateOperativo(Operativo operativo)
+        {
+            await _connection.InsertAsync(operativo);
+        }
+
+        public async Task UpdateOperativo(Operativo operativo)
+        {
+            await _connection.UpdateAsync(operativo);
+        }
+
+        public async Task DeleteOperativo(Operativo operativo)
+        {
+            await _connection.DeleteAsync(operativo);
+        }
+
     }
 }

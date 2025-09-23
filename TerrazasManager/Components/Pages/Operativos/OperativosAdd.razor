@@ -1,0 +1,40 @@
+@page "/operativos/add"
+@using TerrazasManager.Db
+@using TerrazasManager.Db.Models
+@inject NavigationManager NavManager
+<h3>OperativosAdd</h3>
+
+<EditForm Model="@NewOperativo" OnValidSubmit="Submit">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <ValidationSummary></ValidationSummary>
+
+    <div>
+        <label for="NombreOperativo">Nombre del Operativo:</label>
+        <InputText id="NombreOperativo" @bind-Value="@NewOperativo.NombreOperativo"></InputText>
+    </div>
+
+    <div>
+        <label for="FechaOperativo">Fecha del Operativo</label>
+        <InputDate id="FechaOperativo" @bind-Value="@NewOperativo.FechaOperativo"></InputDate>
+    </div>
+
+    <div>
+        <label for="DescripcionOperativo">Descripción del Operativo:</label>
+        <InputText id="DescripcionOperativo" @bind-Value="@NewOperativo.DescripcionOperativo"></InputText>
+    </div>
+
+    <button type="submit">Añadir</button>
+</EditForm>
+
+
+@code {
+    [Inject]
+    private LocalDbService _dbService { get; set; }
+    Operativo NewOperativo = new();
+
+    private async void Submit()
+    {
+        await _dbService.CreateOperativo(NewOperativo);
+        NavManager.NavigateTo("/operativos");
+    }
+}

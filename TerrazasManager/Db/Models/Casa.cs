@@ -23,4 +23,6 @@ namespace TerrazasManager.Db.Models
         [Required]
         public string JefeFamilia { get; set; }
     }
+
+
 }

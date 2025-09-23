@@ -7,3 +7,89 @@
     <span>Añadir Operativos</span>
 </NavLink>
 
+
+<ul>
+    @foreach (var Operativo in TodoslosOperativos) {
+        <li>
+        <div class="vertical-stack-container">
+                <div class="texts">
+
+                    <h3 class="name">@Operativo.NombreOperativo</h3>
+
+                    <div class="descripcion"><span class="date-time">@Operativo.FechaOperativo</span>@Operativo.DescripcionOperativo</div>
+                </div>
+            <button @onclick="() => DeleteData(Operativo.Id)">Eliminar Operativo</button>
+            </div>
+        </li>
+    }
+</ul>
+
+<style>
+
+    ul {
+        list-style-type:none;
+        margin: 15px;
+        padding: 0;
+
+    }
+
+    .vertical-stack-container {
+        display: flex;
+        flex-direction: column; /* Stacks items vertically */
+        gap: 10px; /* Adds space between items */
+        padding: 0;
+        margin: 0;
+    }
+
+        .vertical-stack-container div {
+            padding: 5px;
+            background-color: #f8f9fa;
+            padding-bottom: 0; 
+            
+            
+        }
+
+    .texts {
+        justify-content: space-between;
+        padding: 14px 16px;
+        border-bottom: 1px solid #2c2c2e;
+    }
+
+    .name {
+        font-size: 30px;
+        
+    }
+
+    .descripcion {
+        justify-content: space-between;
+        
+    }
+
+</style>
+
+@code {
+    [Inject]
+    private LocalDbService _dbService { get; set; }
+    List<Operativo> TodoslosOperativos = new List<Operativo> { };
+
+    protected override async Task OnInitializedAsync()
+    {
+        TodoslosOperativos = await _dbService.GetOperativos();
+    }
+
+    private async Task DeleteData(int Id)
+    {
+        bool confirmed = await JSRuntime.InvokeAsync<bool>("confirm", "Are  you sure you want to delete this item?");
+        if (confirmed)
+        {
+            await _dbService.DeleteOperativo(await _dbService.GetOperativoById(Id));
+            TodoslosOperativos = await _dbService.GetOperativos();
+        }
+        else
+        {
+            Console.WriteLine("Delete cancelled.");
+        }
+    }
+}
+
+
