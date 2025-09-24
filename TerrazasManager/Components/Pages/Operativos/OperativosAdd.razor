@@ -15,7 +15,7 @@
 
     <div>
         <label for="FechaOperativo">Fecha del Operativo</label>
-        <InputDate id="FechaOperativo" @bind-Value="@NewOperativo.FechaOperativo"></InputDate>
+        <input type="datetime" id="FechaOperativo" @bind="@NewOperativo.FechaOperativo"></input>
     </div>
 
     <div>
@@ -32,9 +32,18 @@
     private LocalDbService _dbService { get; set; }
     Operativo NewOperativo = new();
 
-    private async void Submit()
+    protected override void OnInitialized()
     {
+        
+        NewOperativo.FechaOperativo = DateTime.Now;  
+    }
+
+
+    private async void Submit()
+    { 
+       
         await _dbService.CreateOperativo(NewOperativo);
         NavManager.NavigateTo("/operativos");
     }
 }
+

@@ -1,0 +1,41 @@
+@page "/operativos/edit/{OperativoId:int}"
+@using TerrazasManager.Db
+@using TerrazasManager.Db.Models
+@inject NavigationManager NavManager
+<h3>OperativosEdit</h3>
+
+<h4>sexito on the beach</h4>
+
+<ul>
+    @foreach (var Casa in TodaslasCasas)
+    {
+        <li>
+            <div>
+                @Casa.NumeroCasa
+                
+            </div>
+        </li>
+    }
+</ul>
+
+@code {
+    [Inject]
+    private LocalDbService _dbService { get; set; }
+    Operativo OperativoEditar = new();
+    List<Casa> TodaslasCasas = new List<Casa> { };
+
+    [Parameter]
+    public int OperativoId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        OperativoEditar = await _dbService.GetOperativoById(OperativoId);
+        TodaslasCasas = await _dbService.GetCasas();
+    }
+
+    private async void Submit()
+    {
+        await _dbService.UpdateOperativo(OperativoEditar);
+        NavManager.NavigateTo("/operativos");
+    }
+}

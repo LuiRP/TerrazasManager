@@ -14,9 +14,9 @@ namespace TerrazasManager.Db.Models
         [PrimaryKey]
         [AutoIncrement]
         public int Id { get; set; }
-        [Required]
+        [Required(ErrorMessage = "El nombre del operativo es requerido")]
         public string NombreOperativo { get; set; }
-        [Required]
+        [Required(ErrorMessage = "La fecha del operativo es requerida")]
         public DateTime FechaOperativo { get; set; }
         //No estoy seguro si este campo es el correcto
         public string AgregarFamilias { get; set; }

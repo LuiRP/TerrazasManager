@@ -2,6 +2,7 @@
 @inject IJSRuntime JSRuntime
 @using TerrazasManager.Db
 @using TerrazasManager.Db.Models
+@inject NavigationManager NavManager
 <h3>Operativos</h3>
 <NavLink href="/operativos/add">
     <span>Añadir Operativos</span>
@@ -11,15 +12,15 @@
 <ul>
     @foreach (var Operativo in TodoslosOperativos) {
         <li>
-        <div class="vertical-stack-container">
+            <div class="vertical-stack-container" @onclick="() => GoToEdit(Operativo.Id)">
+                
                 <div class="texts">
 
                     <h3 class="name">@Operativo.NombreOperativo</h3>
-
                     <div class="descripcion"><span class="date-time">@Operativo.FechaOperativo</span>@Operativo.DescripcionOperativo</div>
-                </div>
-            <button @onclick="() => DeleteData(Operativo.Id)">Eliminar Operativo</button>
+                </div>  
             </div>
+            <button @onclick="() => DeleteData(Operativo.Id)">Eliminar Operativo</button>
         </li>
     }
 </ul>
@@ -90,6 +91,10 @@
             Console.WriteLine("Delete cancelled.");
         }
     }
+
+    private void GoToEdit(int Id)
+    {
+        NavManager.NavigateTo($"/operativos/edit/{Id}");
+    }
+
 }
-
-
