@@ -2,18 +2,27 @@
 @using TerrazasManager.Db
 @using TerrazasManager.Db.Models
 @inject NavigationManager NavManager
+
 <h3>OperativosEdit</h3>
 
-<h4>sexito on the beach</h4>
-
+<h4>Casas que Recibieron sus Bombonas</h4>
 <ul>
-    @foreach (var Casa in TodaslasCasas)
+    @foreach (var casa in CasasRecibieron)
     {
         <li>
-            <div>
-                @Casa.NumeroCasa
-                
-            </div>
+            <input type="checkbox" checked @onchange="(e) => ToggleCasaRecibio(casa, e.Value)" />
+            <span>@casa.NumeroCasa</span>
+        </li>
+    }
+</ul>
+
+<h4>Casas que No Recibieron sus Bombonas</h4>
+<ul>
+    @foreach (var casa in CasasNoRecibieron)
+    {
+        <li>
+            <input type="checkbox" @onchange="(e) => ToggleCasaRecibio(casa, e.Value)" />
+            <span>@casa.NumeroCasa</span>
         </li>
     }
 </ul>
@@ -21,8 +30,11 @@
 @code {
     [Inject]
     private LocalDbService _dbService { get; set; }
+
     Operativo OperativoEditar = new();
-    List<Casa> TodaslasCasas = new List<Casa> { };
+    List<Casa> TodaslasCasas = new List<Casa>();
+    List<Casa> CasasRecibieron = new List<Casa>();
+    List<Casa> CasasNoRecibieron = new List<Casa>();
 
     [Parameter]
     public int OperativoId { get; set; }
@@ -31,11 +43,45 @@
     {
         OperativoEditar = await _dbService.GetOperativoById(OperativoId);
         TodaslasCasas = await _dbService.GetCasas();
+
+        // Aquí debes obtener las casas que ya recibieron bombonas, por ejemplo:
+        // Supongamos que _dbService.GetOperativoElementos() devuelve las casas que recibieron
+        // var operativosElementos = await _dbService.GetOperativoElementos();
+
+        var operativosElementos = await _dbService.GetCasas();
+
+        // Casas que recibieron bombonas
+        CasasRecibieron = TodaslasCasas
+            .Where(c => operativosElementos.Any(o => o.Id == c.Id))
+            .ToList();
+
+        // Casas que no recibieron bombonas
+        CasasNoRecibieron = TodaslasCasas
+            .Where(c => !CasasRecibieron.Any(r => r.Id == c.Id))
+            .ToList();
     }
 
-    private async void Submit()
+    private void ToggleCasaRecibio(Casa casa, object checkedValue)
     {
-        await _dbService.UpdateOperativo(OperativoEditar);
-        NavManager.NavigateTo("/operativos");
+        bool isChecked = checkedValue is bool b && b;
+
+        if (isChecked)
+        {
+            // Mover casa a la lista de recibieron
+            if (CasasNoRecibieron.Contains(casa))
+            {
+                CasasNoRecibieron.Remove(casa);
+                CasasRecibieron.Add(casa);
+            }
+        }
+        else
+        {
+            // Mover casa a la lista de no recibieron
+            if (CasasRecibieron.Contains(casa))
+            {
+                CasasRecibieron.Remove(casa);
+                CasasNoRecibieron.Add(casa);
+            }
+        }
     }
 }

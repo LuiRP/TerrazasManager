@@ -74,5 +74,27 @@ namespace TerrazasManager.Db
             await _connection.DeleteAsync(operativo);
         }
 
+        //OperativosElementos DB methods
+
+        public async Task<List<OperativoElementos>> GetOperativoElementos()
+        {
+            return await _connection.Table<OperativoElementos>().ToListAsync();
+        }
+
+        public async Task<OperativoElementos> GetOperativoElementosById(int id)
+        {
+            return await _connection.Table<OperativoElementos>().Where(x => x.Id == id).FirstOrDefaultAsync();
+        }
+
+        public async Task CreateOperativoElementos(OperativoElementos operativoelementos)
+        {
+            await _connection.InsertAsync(operativoelementos);
+        }
+
+        public async Task DeleteOperativoElementos(OperativoElementos operativoelementos)
+        {
+            await _connection.DeleteAsync(operativoelementos);
+        }
+
     }
 }
